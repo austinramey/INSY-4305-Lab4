@@ -1,3 +1,5 @@
+package Lab_4;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
@@ -7,18 +9,14 @@ import javax.swing.*;
 
 public class ConvertFrame extends JFrame
 {
-    private JRadioButton dollarRadioButtonFrom;
-    private JRadioButton pesoRadioButtonFrom;
-    private JRadioButton euroRadioButtonFrom;
-    private ButtonGroup fromButtonGroup;
-    private JPanel fromJPanel;
-    private JRadioButton dollarRadioButtonTo;
-    private JRadioButton pesoRadioButtonTo;
-    private JRadioButton euroRadioButtonTo;
-    private ButtonGroup toButtonGroup;
-    private JPanel toJPanel;
-    private JTextField userJTextField;
-    private JTextField convertedJTextField;
+    private final JRadioButton dollarRadioButtonFrom;
+    private final JRadioButton pesoRadioButtonFrom;
+    private final JRadioButton euroRadioButtonFrom;
+    private final JRadioButton dollarRadioButtonTo;
+    private final JRadioButton pesoRadioButtonTo;
+    private final JRadioButton euroRadioButtonTo;
+    private final JTextField userJTextField;
+    private final JTextField convertedJTextField;
     final JLabel convertFrom;
     final JLabel enterCurrency;
     final JLabel convertTo;
@@ -38,21 +36,16 @@ public class ConvertFrame extends JFrame
         aboutItem.setMnemonic('a');
         JMenu exitItem = new JMenu("Exit");
         exitItem.setMnemonic('e');
-        
+
+        // Setup exit action
+        exitItem.addActionListener(e -> System.exit(0));
+        convertItem.addActionListener(new ConversionHandler());
+
         // Adds all items to menu
         fileMenu.add(convertItem);
         fileMenu.add(aboutItem);
         fileMenu.add(exitItem);
-        MyEventHandler convertItemHandler = new MyEventHandler();
-        convertItem.addActionListener(convertItemHandler);
 
-        // Setup exit action
-        exitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
 
         // Initializes actual Menu Bar
         JMenuBar bar = new JMenuBar();
@@ -63,11 +56,11 @@ public class ConvertFrame extends JFrame
         JPanel fromIconJPanel = new JPanel();
         fromIconJPanel.setLayout(new GridLayout(1, 3));
         JLabel dollarFromImage = new JLabel();
-        dollarFromImage.setIcon(new ImageIcon("dollar.jpg"));
+        dollarFromImage.setIcon(new ImageIcon("Lab_4/dollar.jpg"));
         JLabel pesoFromImage = new JLabel();
-        pesoFromImage.setIcon(new ImageIcon("peso.jpg"));
+        pesoFromImage.setIcon(new ImageIcon("Lab_4/peso.jpg"));
         JLabel euroFromImage = new JLabel();
-        euroFromImage.setIcon(new ImageIcon("euro.jpg"));
+        euroFromImage.setIcon(new ImageIcon("Lab_4/euro.jpg"));
         fromIconJPanel.add(dollarFromImage);
         fromIconJPanel.add(pesoFromImage);
         fromIconJPanel.add(euroFromImage);
@@ -76,7 +69,7 @@ public class ConvertFrame extends JFrame
         dollarRadioButtonFrom = new JRadioButton("Dollar", true);
         pesoRadioButtonFrom = new JRadioButton("Peso", false);
         euroRadioButtonFrom = new JRadioButton("Euro", false);
-        fromButtonGroup = new ButtonGroup();
+        ButtonGroup fromButtonGroup = new ButtonGroup();
         fromButtonGroup.add(dollarRadioButtonFrom);
         fromButtonGroup.add(pesoRadioButtonFrom);
         fromButtonGroup.add(euroRadioButtonFrom);
@@ -85,11 +78,11 @@ public class ConvertFrame extends JFrame
         JPanel toIconJPanel = new JPanel();
         toIconJPanel.setLayout(new GridLayout(1,3));
         JLabel dollarToImage = new JLabel();
-        dollarToImage.setIcon(new ImageIcon("dollar.jpg"));
+        dollarToImage.setIcon(new ImageIcon("Lab_4/dollar.jpg"));
         JLabel pesoToImage = new JLabel();
-        pesoToImage.setIcon(new ImageIcon("peso.jpg"));
+        pesoToImage.setIcon(new ImageIcon("Lab_4/peso.jpg"));
         JLabel euroToImage = new JLabel();
-        euroToImage.setIcon(new ImageIcon("euro.jpg"));
+        euroToImage.setIcon(new ImageIcon("Lab_4/euro.jpg"));
         toIconJPanel.add(dollarToImage);
         toIconJPanel.add(pesoToImage);
         toIconJPanel.add(euroToImage);
@@ -98,20 +91,20 @@ public class ConvertFrame extends JFrame
         dollarRadioButtonTo = new JRadioButton("Dollar", true);
         pesoRadioButtonTo = new JRadioButton("Peso", false);
         euroRadioButtonTo = new JRadioButton("Euro", false);
-        toButtonGroup = new ButtonGroup();
+        ButtonGroup toButtonGroup = new ButtonGroup();
         toButtonGroup.add(dollarRadioButtonTo);
         toButtonGroup.add(pesoRadioButtonTo);
         toButtonGroup.add(euroRadioButtonTo);
         
         // create from JPanel
-        fromJPanel = new JPanel();
+        JPanel fromJPanel = new JPanel();
         fromJPanel.setLayout(new GridLayout(1, 3));
         fromJPanel.add(dollarRadioButtonFrom);
         fromJPanel.add(pesoRadioButtonFrom);
         fromJPanel.add(euroRadioButtonFrom);
 
         // create to JPanel
-        toJPanel = new JPanel();
+        JPanel toJPanel = new JPanel();
         toJPanel.setLayout(new GridLayout(1, 3));
         toJPanel.add(dollarRadioButtonTo);
         toJPanel.add(pesoRadioButtonTo);
@@ -128,12 +121,29 @@ public class ConvertFrame extends JFrame
         userJTextField.setText("");
 
         // event handling
-        MyEventHandler handler = new MyEventHandler();
+        ConversionHandler handler = new ConversionHandler();
         userJTextField.addActionListener(handler);
 
         // Field to display currency after conversion
         convertedJTextField = new JTextField(10);
         convertedJTextField.setEditable(false);
+
+        // Button Group of Convert, Clear and Exit
+        JButton convertButton = new JButton("Convert");
+        JButton clearButton = new JButton("Clear");
+        JButton exitButton = new JButton("Exit");
+
+        // Setup actions
+        convertButton.addActionListener(new ConversionHandler());
+        clearButton.addActionListener(new ClearHandler());
+        exitButton.addActionListener(e -> System.exit(0));
+
+        // Add button group to panel
+        JPanel bottomButtonGroup = new JPanel();
+        bottomButtonGroup.setLayout(new GridLayout(1,3));
+        bottomButtonGroup.add(convertButton);
+        bottomButtonGroup.add(clearButton);
+        bottomButtonGroup.add(exitButton);
 
         // Add components to GUI
         setLayout(new GridLayout(11, 1));
@@ -144,9 +154,10 @@ public class ConvertFrame extends JFrame
         add(toIconJPanel);
         add(toJPanel);
         add(convertedJTextField);
+        add(bottomButtonGroup);
     }
 
-    private class MyEventHandler implements ActionListener{
+    private class ConversionHandler implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent event) {
             double convertCurr = 0.0;
@@ -158,7 +169,7 @@ public class ConvertFrame extends JFrame
             // Dollar to Dollar
             if(dollarRadioButtonFrom.isSelected() && 
             dollarRadioButtonTo.isSelected()){
-                convertCurr = (double) (userCurr);
+                convertCurr = userCurr;
                 convertCurr = round(convertCurr, 2);
                 result = "dollar to dollar";
             } 
@@ -166,7 +177,7 @@ public class ConvertFrame extends JFrame
             // Dollar to Peso
             else if (dollarRadioButtonFrom.isSelected() && 
             pesoRadioButtonTo.isSelected()){
-                convertCurr = userCurr * 17.62;
+                convertCurr = userCurr * 17.64;
                 convertCurr = round(convertCurr, 2);
                 result = "dollar to peso";
             }
@@ -174,7 +185,7 @@ public class ConvertFrame extends JFrame
             // Dollar to euro
             else if (dollarRadioButtonFrom.isSelected() &&
             euroRadioButtonTo.isSelected()){
-                convertCurr = userCurr * 0.93;
+                convertCurr = userCurr * 0.94;
                 convertCurr = round(convertCurr, 2);
                 result = "dollar to euro";
             }
@@ -182,7 +193,7 @@ public class ConvertFrame extends JFrame
             // Peso to dollar
             else if (pesoRadioButtonFrom.isSelected() && 
             dollarRadioButtonTo.isSelected()){
-                convertCurr = userCurr / 17.62;
+                convertCurr = userCurr * 0.057;
                 convertCurr = round(convertCurr, 2);
                 result = "peso to dollar";
             }
@@ -199,7 +210,7 @@ public class ConvertFrame extends JFrame
             // Peso to euro
             else if (pesoRadioButtonFrom.isSelected() && 
             euroRadioButtonTo.isSelected()){
-                convertCurr = userCurr * 0.05;
+                convertCurr = userCurr * 0.053;
                 convertCurr = round(convertCurr, 2);
                 result = "peso to euro";
             }
@@ -207,7 +218,7 @@ public class ConvertFrame extends JFrame
             // Euro to Dollar
             else if (euroRadioButtonFrom.isSelected() && 
             dollarRadioButtonTo.isSelected()){
-                convertCurr = userCurr / 0.93;
+                convertCurr = userCurr * 1.068;
                 convertCurr = round(convertCurr, 2);
                 result = "euro to dollar";
             }
@@ -215,7 +226,7 @@ public class ConvertFrame extends JFrame
             // Euro to Peso
             else if (euroRadioButtonFrom.isSelected() && 
             pesoRadioButtonTo.isSelected()){
-                convertCurr = userCurr / 0.05;
+                convertCurr = userCurr * 18.854;
                 convertCurr = round(convertCurr, 2);
                 result = "euro to peso";
             }
@@ -229,8 +240,16 @@ public class ConvertFrame extends JFrame
             }
 
             convertedJTextField.setText(String.valueOf(convertCurr));
-            result += "\n" + userCurr + "  to \t\t  " + convertCurr + "";
+            result += "\n" + userCurr + "  to \t\t  " + convertCurr + " ";
             JOptionPane.showMessageDialog(ConvertFrame.this, result, "Converted Currency", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private class ClearHandler implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent event){
+            userJTextField.setText("");
+            convertedJTextField.setText("");
         }
     }
 
@@ -238,7 +257,7 @@ public class ConvertFrame extends JFrame
         if(places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        bd = bd.setScale(places, RoundingMode.HALF_DOWN);
         return bd.doubleValue();
     }
 }
