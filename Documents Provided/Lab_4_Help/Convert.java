@@ -1,5 +1,6 @@
-package Lab_4_Help;
 // Program converts temperatures.
+import Lab_4.ConvertFrame;
+
 import javax.swing.JFrame;
 
 public class Convert 
