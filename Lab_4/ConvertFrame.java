@@ -36,10 +36,13 @@ public class ConvertFrame extends JFrame
         aboutItem.setMnemonic('a');
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.setMnemonic('e');
+        JMenuItem clearItem = new JMenuItem("Clear");
+        clearItem.setMnemonic('c');
 
 
         // Adds all items to menu
         fileMenu.add(convertItem);
+        fileMenu.add(clearItem);
         fileMenu.add(aboutItem);
         fileMenu.add(exitItem);
 
@@ -47,6 +50,7 @@ public class ConvertFrame extends JFrame
         exitItem.addActionListener(new ExitHandler());
         convertItem.addActionListener(new ConversionHandler());
         aboutItem.addActionListener(new AboutHandler());
+        clearItem.addActionListener(new ClearHandler());
 
         // Initializes actual Menu Bar
         JMenuBar bar = new JMenuBar();
