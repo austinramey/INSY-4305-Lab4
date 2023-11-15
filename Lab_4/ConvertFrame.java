@@ -1,6 +1,6 @@
 package Lab_4;
 
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,22 +30,23 @@ public class ConvertFrame extends JFrame
         // Creates Menu Bar Items
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic('F');
-        JMenu convertItem = new JMenu("Convert");
+        JMenuItem convertItem = new JMenuItem("Convert");
         convertItem.setMnemonic('C');
-        JMenu aboutItem = new JMenu("About");
+        JMenuItem aboutItem = new JMenuItem("About");
         aboutItem.setMnemonic('a');
-        JMenu exitItem = new JMenu("Exit");
+        JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.setMnemonic('e');
 
-        // Setup exit action
-        exitItem.addActionListener(e -> System.exit(0));
-        convertItem.addActionListener(new ConversionHandler());
 
         // Adds all items to menu
         fileMenu.add(convertItem);
         fileMenu.add(aboutItem);
         fileMenu.add(exitItem);
 
+        // Setup exit action
+        exitItem.addActionListener(new ExitHandler());
+        convertItem.addActionListener(new ConversionHandler());
+        aboutItem.addActionListener(new AboutHandler());
 
         // Initializes actual Menu Bar
         JMenuBar bar = new JMenuBar();
@@ -126,6 +127,7 @@ public class ConvertFrame extends JFrame
 
         // Field to display currency after conversion
         convertedJTextField = new JTextField(10);
+        convertedJTextField.setBackground(Color.gray);
         convertedJTextField.setEditable(false);
 
         // Button Group of Convert, Clear and Exit
@@ -136,7 +138,7 @@ public class ConvertFrame extends JFrame
         // Setup actions
         convertButton.addActionListener(new ConversionHandler());
         clearButton.addActionListener(new ClearHandler());
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(new ExitHandler());
 
         // Add button group to panel
         JPanel bottomButtonGroup = new JPanel();
@@ -240,6 +242,7 @@ public class ConvertFrame extends JFrame
             }
 
             convertedJTextField.setText(String.valueOf(convertCurr));
+            convertedJTextField.setBackground(Color.green);
             result += "\n" + userCurr + "  to \t\t  " + convertCurr + " ";
             JOptionPane.showMessageDialog(ConvertFrame.this, result, "Converted Currency", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -250,6 +253,61 @@ public class ConvertFrame extends JFrame
         public void actionPerformed(ActionEvent event){
             userJTextField.setText("");
             convertedJTextField.setText("");
+            convertedJTextField.setBackground(Color.gray);
+        }
+    }
+
+    private class ExitHandler implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent event){
+            JFrame messageFrame = new JFrame();
+            messageFrame.setLayout(new GridLayout(2,2));
+            JLabel innerImageLabel = new JLabel();
+            ImageIcon logoutImage = new ImageIcon("Lab_4/user-login-305.png");
+            innerImageLabel.setIcon(logoutImage);
+            JLabel innerTextLabel = new JLabel("Are you sure?");
+
+            // Creating buttons
+            JButton yesButton = new JButton("Yes");
+            JButton noButton = new JButton("No");
+
+            // Button Actions
+            yesButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            });
+            noButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    messageFrame.setVisible(false);
+                }
+            });
+
+            // Creating button panels
+            JPanel yesPanel = new JPanel();
+            yesPanel.add(yesButton);
+            JPanel noPanel = new JPanel();
+            yesPanel.add(noButton);
+
+            // Adding components
+            messageFrame.add(innerImageLabel);
+            messageFrame.add(innerTextLabel);
+            messageFrame.add(yesPanel);
+            messageFrame.add(noPanel);
+            messageFrame.setVisible(true);
+            messageFrame.setSize(300,200);
+        }
+    }
+
+    private class AboutHandler implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent event){
+            String message = "Currency Conversion Program\n" +
+                    "using menus and buttons\n" +
+                    "source: https://www.oanda.com/currency-converter/";
+            JOptionPane.showMessageDialog(ConvertFrame.this, message, "About Program", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
