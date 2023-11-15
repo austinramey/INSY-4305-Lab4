@@ -261,6 +261,7 @@ public class ConvertFrame extends JFrame
         @Override
         public void actionPerformed(ActionEvent event){
             JFrame messageFrame = new JFrame();
+            messageFrame.setTitle("Exit dialog");
             messageFrame.setLayout(new GridLayout(2,2));
             JLabel innerImageLabel = new JLabel();
             ImageIcon logoutImage = new ImageIcon("Lab_4/user-login-305.png");
