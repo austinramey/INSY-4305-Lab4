@@ -163,7 +163,7 @@ public class ConvertFrame extends JFrame
         @Override
         public void actionPerformed(ActionEvent event) {
             double convertCurr = 0.0;
-            int userCurr = 0;
+            int userCurr;
             String result = "";
 
             userCurr = Integer.parseInt(userJTextField.getText());
@@ -257,12 +257,15 @@ public class ConvertFrame extends JFrame
         }
     }
 
-    private class ExitHandler implements ActionListener{
+    private static class ExitHandler implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent event){
+            // Initialize JFrame
             JFrame messageFrame = new JFrame();
             messageFrame.setTitle("Exit dialog");
             messageFrame.setLayout(new GridLayout(2,2));
+
+            // Create JLabels for image and text
             JLabel innerImageLabel = new JLabel();
             ImageIcon logoutImage = new ImageIcon("Lab_4/user-login-305.png");
             innerImageLabel.setIcon(logoutImage);
@@ -273,18 +276,8 @@ public class ConvertFrame extends JFrame
             JButton noButton = new JButton("No");
 
             // Button Actions
-            yesButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.exit(0);
-                }
-            });
-            noButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    messageFrame.setVisible(false);
-                }
-            });
+            yesButton.addActionListener(e -> System.exit(0));
+            noButton.addActionListener(e -> messageFrame.setVisible(false));
 
             // Creating button panels
             JPanel yesPanel = new JPanel();
@@ -305,9 +298,10 @@ public class ConvertFrame extends JFrame
     private class AboutHandler implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent event){
-            String message = "Currency Conversion Program\n" +
-                    "using menus and buttons\n" +
-                    "source: https://www.oanda.com/currency-converter/";
+            String message = """
+                    Currency Conversion Program
+                    using menus and buttons
+                    source: https://www.oanda.com/currency-converter/""";
             JOptionPane.showMessageDialog(ConvertFrame.this, message, "About Program", JOptionPane.INFORMATION_MESSAGE);
         }
     }
